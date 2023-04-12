@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { View, Text, StyleSheet, Image, TextInput } from "react-native";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
@@ -6,12 +7,28 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { FontAwesome, EvilIcons } from "@expo/vector-icons";
 
+import { storage, db } from "../../firebase/config";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { async } from "@firebase/util";
+
 const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [comment, setComment] = useState("");
+  const [isCameraReady, setIsCameraReady] = useState(false);
   const [location, setLocation] = useState(null);
+  const [formValues, setFormValues] = useState({ title: "", location: "" });
   const [hasCamPermission, setHasCamPermission] = useState(false);
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
+
+  const { userID, username } = useSelector((store) => store.auth);
+
+  const cameraRef = useRef();
+
+  const cameraReady = () => {
+    setCamera(!camera);
+  };
 
   useEffect(() => {
     (async () => {
@@ -29,19 +46,64 @@ const CreatePostsScreen = ({ navigation }) => {
   }, []);
 
   const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    setPhoto(photo.uri);
-    console.log("foto", photo.uri);
-    let location = await Location.getCurrentPositionAsync();
-    const coords = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    };
-    setLocation(coords);
-    console.log(coords);
+    if (camera && cameraRef) {
+      try {
+        // const photo = await cameraRef.current.takePictureAsync();
+        const photo = await camera.takePictureAsync();
+        setPhoto(photo.uri);
+        cameraReady();
+
+        let location = await Location.getCurrentPositionAsync({});
+        const coords = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        setLocation(coords);
+        console.log("foto", photo.uri);
+        console.log("coords", coords);
+        console.log("comment", comment);
+        console.log(isCameraReady);
+      } catch (error) {
+        console.log("Failed to take photo", error);
+      }
+    } else {
+      console.log("Camera is not ready yet");
+    }
+  };
+
+  const uploadFotoToServer = async () => {
+    const response = await fetch(photo);
+    const file = await response.blob();
+    const uniquePostId = Date.now().toString();
+    const storageRef = ref(storage, `postImage/${uniquePostId}`);
+    await uploadBytes(storageRef, file);
+    const processedPhoto = await getDownloadURL(
+      ref(storage, `postImage/${uniquePostId}`)
+    );
+    console.log("processedPhoto", processedPhoto);
+    return processedPhoto;
+  };
+
+  const uploadPostToServer = async () => {
+    const photo = await uploadFotoToServer();
+    try {
+      const db = getFirestore();
+
+      const createPost = await addDoc(collection(db, "posts"), {
+        userID,
+        username,
+        photo,
+        location,
+        comment,
+      });
+      console.log("Document written with ID: ", createPost.id);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   const sendPhoto = () => {
+    uploadPostToServer();
     console.log("navigation", navigation);
     navigation.navigate("DefaultScreen", { photo });
     setPhoto("");
@@ -49,7 +111,11 @@ const CreatePostsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} ref={setCamera}>
+      <Camera
+        style={styles.camera}
+        ref={(ref) => setCamera(ref)}
+        onCameraReady={cameraReady}
+      >
         {photo && (
           <View style={styles.previewPhotoContainer}>
             <Image
@@ -64,7 +130,11 @@ const CreatePostsScreen = ({ navigation }) => {
       </Camera>
       <Text style={styles.postImgText}>Завантажте фото</Text>
       <View style={styles.postForm}>
-        <TextInput style={styles.postName} placeholder="Назва..." />
+        <TextInput
+          style={styles.postName}
+          placeholder="Назва..."
+          onChangeText={setComment}
+        />
         <TextInput style={styles.postNameLocation} placeholder="Локація" />
         <EvilIcons
           name="location"
