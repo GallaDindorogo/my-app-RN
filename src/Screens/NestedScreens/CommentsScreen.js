@@ -1,4 +1,5 @@
 import React from "react";
+import { TextInput } from "react-native-gesture-handler";
 import { View, Text, StyleSheet } from "react-native";
 
 const CommentsScreen = () => {

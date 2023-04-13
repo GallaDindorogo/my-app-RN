@@ -16,7 +16,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState("");
-  const [isCameraReady, setIsCameraReady] = useState(false);
+  // const [isCameraReady, setIsCameraReady] = useState(false);
   const [location, setLocation] = useState(null);
   const [formValues, setFormValues] = useState({ title: "", location: "" });
   const [hasCamPermission, setHasCamPermission] = useState(false);
@@ -29,6 +29,10 @@ const CreatePostsScreen = ({ navigation }) => {
   const cameraReady = () => {
     setCamera(!camera);
   };
+
+  // const handleCameraReady = () => {
+  //   setIsCameraReady(true);
+  // };
 
   useEffect(() => {
     (async () => {
@@ -46,7 +50,7 @@ const CreatePostsScreen = ({ navigation }) => {
   }, []);
 
   const takePhoto = async () => {
-    if (camera && cameraRef) {
+    if (cameraRef && camera) {
       try {
         // const photo = await cameraRef.current.takePictureAsync();
         const photo = await camera.takePictureAsync();
@@ -62,7 +66,7 @@ const CreatePostsScreen = ({ navigation }) => {
         console.log("foto", photo.uri);
         console.log("coords", coords);
         console.log("comment", comment);
-        console.log(isCameraReady);
+        // console.log("isCameraReady", isCameraReady);
       } catch (error) {
         console.log("Failed to take photo", error);
       }
@@ -105,7 +109,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const sendPhoto = () => {
     uploadPostToServer();
     console.log("navigation", navigation);
-    navigation.navigate("DefaultScreen", { photo });
+    navigation.navigate("DefaultScreen");
     setPhoto("");
   };
 

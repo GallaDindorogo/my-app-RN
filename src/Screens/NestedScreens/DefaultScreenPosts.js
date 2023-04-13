@@ -2,16 +2,28 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList, Image, Button, Text } from "react-native";
 
+import { db } from "../../firebase/config";
+import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
+
 const DefaultScreenPosts = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
   console.log("route", route.params);
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
-  console.log("posts", posts);
+    const q = query(collection(db, "posts"));
+    const unsubscribe = onSnapshot(q, (data) => {
+      const posts = data.docs.map((post) => ({
+        ...post.data(),
+        id: post.id,
+      }));
+      setPosts(posts);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  console.log("new posts", posts);
 
   return (
     <View style={styles.container}>
@@ -30,13 +42,23 @@ const DefaultScreenPosts = ({ route, navigation }) => {
               source={{ uri: item.photo }}
               style={{ width: 350, height: 200, borderRadius: 10 }}
             ></Image>
+            <View>
+              <Text>{item.comment}</Text>
+            </View>
+            <View>
+              <Button
+                title="Location"
+                onPress={() =>
+                  navigation.navigate("Map", { location: item.location })
+                }
+              />
+              <Button
+                title="Comments"
+                onPress={() => navigation.navigate("Comments")}
+              />
+            </View>
           </View>
         )}
-      />
-      <Button title="Location" onPress={() => navigation.navigate("Map")} />
-      <Button
-        title="Comments"
-        onPress={() => navigation.navigate("Comments")}
       />
     </View>
   );
