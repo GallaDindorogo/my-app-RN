@@ -1,4 +1,7 @@
 import * as React from "react";
+import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
 import { useState, useEffect } from "react";
 import { useCallback } from "react";
 
@@ -7,8 +10,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 
 import { View } from "react-native";
-
-import * as SplashScreen from "expo-splash-screen";
 
 import { store } from "./src/Redux/store";
 

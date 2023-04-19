@@ -68,7 +68,6 @@ const RegistrationScreen = ({ navigation }) => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <View
-              // onLayout={onLayoutRootView}
               style={{
                 ...styles.formWrapper,
                 marginTop: isShowKeyboard ? 147 : 263,
@@ -185,7 +184,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
   },
   title: {
-    fontFamily: "RobotoMedium",
+    // fontFamily: "RobotoMedium",
     fontStyle: "normal",
     fontSize: 30,
     lineHeight: 35,
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    fontFamily: "RobotoRegular",
+    // fontFamily: "RobotoRegular",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
@@ -211,7 +210,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   showPass: {
-    fontFamily: "RobotoRegular",
+    // fontFamily: "RobotoRegular",
     fontStyle: "normal",
     lineHeight: 19,
     fontSize: 16,
@@ -229,13 +228,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textButton: {
-    fontFamily: "RobotoRegular",
+    // fontFamily: "RobotoRegular",
     fontStyle: "normal",
     lineHeight: 19,
     color: "#FFFFFF",
   },
   aside: {
-    fontFamily: "RobotoRegular",
+    // fontFamily: "RobotoRegular",
     fontStyle: "normal",
     lineHeight: 19,
     marginTop: 16,

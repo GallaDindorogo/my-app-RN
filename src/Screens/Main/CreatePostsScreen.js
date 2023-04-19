@@ -10,15 +10,12 @@ import { FontAwesome, EvilIcons } from "@expo/vector-icons";
 import { storage, db } from "../../firebase/config";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { async } from "@firebase/util";
 
 const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState("");
-  // const [isCameraReady, setIsCameraReady] = useState(false);
   const [location, setLocation] = useState(null);
-  const [formValues, setFormValues] = useState({ title: "", location: "" });
   const [hasCamPermission, setHasCamPermission] = useState(false);
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
 
@@ -29,10 +26,6 @@ const CreatePostsScreen = ({ navigation }) => {
   const cameraReady = () => {
     setCamera(!camera);
   };
-
-  // const handleCameraReady = () => {
-  //   setIsCameraReady(true);
-  // };
 
   useEffect(() => {
     (async () => {
@@ -52,7 +45,6 @@ const CreatePostsScreen = ({ navigation }) => {
   const takePhoto = async () => {
     if (cameraRef && camera) {
       try {
-        // const photo = await cameraRef.current.takePictureAsync();
         const photo = await camera.takePictureAsync();
         setPhoto(photo.uri);
         cameraReady();
@@ -66,7 +58,6 @@ const CreatePostsScreen = ({ navigation }) => {
         console.log("foto", photo.uri);
         console.log("coords", coords);
         console.log("comment", comment);
-        // console.log("isCameraReady", isCameraReady);
       } catch (error) {
         console.log("Failed to take photo", error);
       }

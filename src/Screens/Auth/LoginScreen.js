@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   showPass: {
-    fontFamily: "RobotoRegular",
+    // fontFamily: "RobotoRegular",
     fontStyle: "normal",
     lineHeight: 19,
     fontSize: 16,
@@ -205,13 +205,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textButton: {
-    fontFamily: "RobotoRegular",
+    // fontFamily: "RobotoRegular",
     fontStyle: "normal",
     lineHeight: 19,
     color: "#FFFFFF",
   },
   aside: {
-    fontFamily: "RobotoRegular",
+    // fontFamily: "RobotoRegular",
     fontStyle: "normal",
     lineHeight: 19,
     marginTop: 16,

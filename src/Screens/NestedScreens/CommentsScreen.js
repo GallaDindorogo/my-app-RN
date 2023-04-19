@@ -1,4 +1,3 @@
-// import { async } from "@firebase/util";
 import {
   addDoc,
   collection,
@@ -17,6 +16,7 @@ import {
   FlatList,
   SafeAreaView,
   Image,
+  Keyboard,
 } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
@@ -26,10 +26,16 @@ import { db } from "../../firebase/config";
 
 const CommentsScreen = ({ route }) => {
   const { postId } = route.params;
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [commentsCount, setCommentsCount] = useState(null);
   const { username, photoURL } = useSelector((state) => state.auth);
+
+  const keyboardHide = () => {
+    Keyboard.dismiss();
+    setIsShowKeyboard(false);
+  };
 
   useEffect(() => {
     getAllComments();
@@ -87,6 +93,8 @@ const CommentsScreen = ({ route }) => {
           style={styles.postName}
           placeholder="Коментар..."
           onChangeText={(value) => setComment(value)}
+          onBlur={keyboardHide}
+          onFocus={() => setIsShowKeyboard(true)}
         />
       </View>
       <View>
