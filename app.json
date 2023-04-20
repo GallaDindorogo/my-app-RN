@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "my-appReactNative-HW",
-    "slug": "my-appReactNative-HW",
+    "slug": "my-app-rn",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.galla.myappReactNativeHW"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.galla.myappReactNativeHW"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "356216b5-481e-4381-8d14-6c0d95607025"
+      }
+    },
+    "owner": "galla"
   }
 }
